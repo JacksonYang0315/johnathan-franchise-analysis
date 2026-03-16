@@ -840,8 +840,9 @@ new Chart(document.getElementById('chartCost5yr'),{type:'bar',
   }
 
   // 損益平衡計算
+  const BE_MAX=40;
   function calcBE(){
-    const cn=Array.from({length:26},(_,i)=>i),NPC=1800-250;
+    const cn=Array.from({length:BE_MAX+1},(_,i)=>i),NPC=1800-250;
     return {x:cn, y:cn.map(n=>n*NPC-FC)};
   }
 
@@ -887,17 +888,27 @@ new Chart(document.getElementById('chartCost5yr'),{type:'bar',
     cfChart.data.datasets[0].label=`你的設定（${npc}件/月）`;
     cfChart.update();
 
-    // 損益平衡圖加垂直指標線（用 dataset 模擬）
-    const steadyCases=Math.min((N-3)*npc, 25);
-    // 移除舊指標 dataset
+    // 損益平衡圖：標記 6 個月與 12 個月的在管量
+    const cases6m=Math.min(6*npc, BE_MAX);
+    const cases12m=Math.min(12*npc, BE_MAX);
+    // 移除舊指標 datasets
     while(beChart.data.datasets.length>1) beChart.data.datasets.pop();
-    // 加上垂直線指標
-    const markerData=beData.x.map(x=>x===steadyCases?beData.y[x]:null);
+    // 6 個月指標
+    const marker6=beData.x.map(x=>x===cases6m?beData.y[x]:null);
     beChart.data.datasets.push({
-      label:`你的在管量 ≈ ${steadyCases}+`,type:'bar',data:markerData,
-      backgroundColor:'rgba(8,145,178,.25)',borderColor:C.cyan,borderWidth:2,
+      label:`開業 6 個月 ≈ ${cases6m} 件`,type:'bar',data:marker6,
+      backgroundColor:'rgba(217,119,6,.3)',borderColor:C.amber,borderWidth:2,
       borderRadius:3,barPercentage:.7
     });
+    // 12 個月指標
+    if(cases12m!==cases6m){
+      const marker12=beData.x.map(x=>x===cases12m?beData.y[x]:null);
+      beChart.data.datasets.push({
+        label:`開業 12 個月 ≈ ${cases12m} 件`,type:'bar',data:marker12,
+        backgroundColor:'rgba(8,145,178,.3)',borderColor:C.cyan,borderWidth:2,
+        borderRadius:3,barPercentage:.7
+      });
+    }
     beChart.update();
 
     // 回本月份
