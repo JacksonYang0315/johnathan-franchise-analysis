@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>強納森人力 — 加盟投資分析報告</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#ffffff;--surface:#f8fafc;--card:#ffffff;--card-hover:#f1f5f9;
+    --border:#e2e8f0;--border-light:#cbd5e1;
+    --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+    --primary:#0891b2;--primary-dim:rgba(8,145,178,.08);
+    --green:#059669;--green-dim:rgba(5,150,105,.08);
+    --red:#dc2626;--red-dim:rgba(220,38,38,.06);
+    --amber:#d97706;--amber-dim:rgba(217,119,6,.07);
+    --blue:#2563eb;--blue-dim:rgba(37,99,235,.06);
+    --purple:#7c3aed;--purple-dim:rgba(124,58,237,.06);
+    --cyan:#0891b2;
+    --radius:10px;--radius-lg:14px;--radius-sm:8px;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.05);
+    --shadow:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+    --shadow-md:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.04);
+    --shadow-lg:0 10px 15px -3px rgba(0,0,0,.06),0 4px 6px -4px rgba(0,0,0,.04);
+  }
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'IBM Plex Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;
+    background:var(--surface);color:var(--text);
+    line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+  /* ── NAV ── */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.88);backdrop-filter:blur(16px) saturate(180%);
+    border-bottom:1px solid var(--border);
+    padding:14px 24px;display:flex;align-items:center;gap:16px;
+    box-shadow:var(--shadow-sm);
+  }
+  .nav-brand{font-weight:700;font-size:1.05rem;color:var(--primary);letter-spacing:-.02em}
+  .nav-divider{width:1px;height:20px;background:var(--border)}
+  .nav-label{font-size:.82rem;color:var(--text-muted);font-weight:400}
+  .nav-right{margin-left:auto;display:flex;gap:8px}
+  .nav-pill{
+    font-size:.72rem;font-weight:600;padding:4px 12px;border-radius:20px;
+    border:1px solid var(--border);color:var(--text-secondary);
+    background:var(--surface);white-space:nowrap;
+  }
+
+  /* ── HERO ── */
+  .hero{
+    position:relative;overflow:hidden;
+    padding:72px 24px 56px;text-align:center;
+    background:linear-gradient(180deg,#ecfeff 0%,#f0f9ff 40%,var(--surface) 100%);
+    border-bottom:1px solid var(--border);
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='g' width='60' height='60' patternUnits='userSpaceOnUse'%3E%3Cpath d='M60 0H0v60' fill='none' stroke='%230891b2' stroke-width='.3' opacity='.06'/%3E%3C/pattern%3E%3C/defs%3E%3Crect fill='url(%23g)' width='100%25' height='100%25'/%3E%3C/svg%3E");
+  }
+  .hero-inner{position:relative;max-width:720px;margin:0 auto}
+  .hero h1{
+    font-family:'IBM Plex Sans','Noto Sans TC',sans-serif;
+    font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;letter-spacing:-.03em;
+    color:var(--text);margin-bottom:6px;
+  }
+  .hero h1 span{color:var(--primary)}
+  .hero-sub{color:var(--text-muted);font-size:.95rem;margin-bottom:24px}
+  .hero-meta{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+  .hero-tag{
+    font-size:.75rem;font-weight:500;padding:5px 14px;border-radius:20px;
+    background:var(--card);border:1px solid var(--border);color:var(--text-secondary);
+    box-shadow:var(--shadow-sm);
+  }
+
+  /* ── LAYOUT ── */
+  .container{max-width:1200px;margin:0 auto;padding:0 20px}
+  .section{padding:48px 0}
+  .section+.section{border-top:1px solid var(--border)}
+  .section-header{margin-bottom:28px}
+  .section-label{
+    font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
+    color:var(--primary);margin-bottom:6px;display:flex;align-items:center;gap:8px;
+  }
+  .section-label svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .section-title{font-size:1.4rem;font-weight:700;letter-spacing:-.02em;color:var(--text)}
+  .badge{
+    display:inline-block;font-size:.65rem;font-weight:600;padding:2px 8px;border-radius:6px;
+    vertical-align:middle;margin-left:8px;
+  }
+  .badge-info{background:var(--blue-dim);color:var(--blue)}
+  .badge-warn{background:var(--amber-dim);color:var(--amber)}
+  .badge-danger{background:var(--red-dim);color:var(--red)}
+  .badge-ok{background:var(--green-dim);color:var(--green)}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:800px){.grid-2{grid-template-columns:1fr}}
+
+  /* ── CARDS ── */
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+    padding:24px;box-shadow:var(--shadow);
+    transition:border-color .2s ease-out,box-shadow .2s ease-out;
+  }
+  .card:hover{border-color:var(--border-light);box-shadow:var(--shadow-md)}
+  .card-title{font-size:.9rem;font-weight:600;color:var(--text-secondary);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .card-title svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+
+  /* ── STAT CARDS ── */
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:8px}
+  @media(max-width:800px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+  .stat{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:20px;position:relative;overflow:hidden;
+    box-shadow:var(--shadow);transition:border-color .2s ease-out,box-shadow .2s ease-out;
+  }
+  .stat:hover{border-color:var(--border-light);box-shadow:var(--shadow-md)}
+  .stat::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    border-radius:var(--radius) var(--radius) 0 0;
+  }
+  .stat:nth-child(1)::before{background:var(--amber)}
+  .stat:nth-child(2)::before{background:var(--red)}
+  .stat:nth-child(3)::before{background:var(--green)}
+  .stat:nth-child(4)::before{background:var(--purple)}
+  .stat-label{font-size:.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  .stat-value{font-family:'IBM Plex Mono',monospace;font-size:1.6rem;font-weight:700;line-height:1.2}
+  .stat-note{font-size:.72rem;color:var(--text-muted);margin-top:6px;line-height:1.4}
+  .v-green{color:var(--green)}.v-red{color:var(--red)}.v-amber{color:var(--amber)}
+  .v-blue{color:var(--blue)}.v-purple{color:var(--purple)}
+
+  /* ── CHART ── */
+  .chart-card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+    padding:24px;box-shadow:var(--shadow);
+  }
+  .chart-card h3{font-size:.85rem;font-weight:600;color:var(--text-secondary);margin-bottom:16px}
+  canvas{max-height:320px}
+  .footnote{font-size:.72rem;color:var(--text-muted);margin-top:10px;line-height:1.55}
+
+  /* ── TABLE ── */
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+  th{
+    font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--text-muted);background:var(--surface);
+  }
+  td{color:var(--text-secondary)}
+  tr:hover td{background:rgba(8,145,178,.02)}
+  .row-highlight td{color:var(--text);font-weight:600}
+  .row-cost td{color:var(--red)}
+  .row-total td{color:var(--green);font-weight:700;border-top:2px solid var(--border)}
+
+  /* ── SCENARIO CARDS ── */
+  .scenario{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:16px;
+  }
+  .scenario-label{font-size:.78rem;font-weight:600;margin-bottom:6px}
+  .scenario-body{font-size:.82rem;color:var(--text-secondary);line-height:1.6}
+
+  /* ── CALLOUT ── */
+  .callout{
+    border-radius:var(--radius-sm);padding:16px 18px;margin:16px 0;
+    font-size:.85rem;line-height:1.6;
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .callout svg{width:18px;height:18px;flex-shrink:0;margin-top:2px;stroke-width:2}
+  .callout-amber{background:rgba(217,119,6,.06);color:#92400e;border:1px solid rgba(217,119,6,.18)}
+  .callout-amber svg{stroke:var(--amber)}
+  .callout-red{background:rgba(220,38,38,.05);color:#991b1b;border:1px solid rgba(220,38,38,.15)}
+  .callout-red svg{stroke:var(--red)}
+  .callout-blue{background:rgba(37,99,235,.05);color:#1e40af;border:1px solid rgba(37,99,235,.15)}
+  .callout-blue svg{stroke:var(--blue)}
+
+  /* ── TIMELINE ── */
+  .timeline{display:flex;gap:0;margin:24px 0;overflow-x:auto;padding-bottom:8px}
+  .tl-step{flex:1;min-width:150px;text-align:center;position:relative;padding:20px 10px}
+  .tl-step::before{content:'';position:absolute;top:28px;left:0;right:0;height:2px;background:var(--border)}
+  .tl-step:first-child::before{left:50%}
+  .tl-step:last-child::before{right:50%}
+  .tl-dot{
+    width:32px;height:32px;border-radius:50%;
+    background:var(--primary);color:#fff;
+    font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:700;
+    display:inline-flex;align-items:center;justify-content:center;
+    position:relative;z-index:1;margin-bottom:10px;
+    box-shadow:0 0 0 4px var(--surface),0 0 0 5px var(--primary);
+  }
+  .tl-title{font-size:.85rem;font-weight:600;color:var(--text)}
+  .tl-desc{font-size:.72rem;color:var(--text-muted);margin-top:4px;line-height:1.4}
+
+  /* ── PROS / CONS ── */
+  .pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:800px){.pros-cons{grid-template-columns:1fr}}
+  .pc-card{padding:24px}
+  .pc-card ul{list-style:none;padding:0}
+  .pc-card li{
+    font-size:.85rem;color:var(--text-secondary);padding:6px 0 6px 24px;
+    position:relative;line-height:1.5;
+  }
+  .pc-card li::before{
+    content:'';position:absolute;left:0;top:12px;width:8px;height:8px;border-radius:50%;
+  }
+  .pc-pros li::before{background:var(--green)}
+  .pc-cons li::before{background:var(--red)}
+
+  /* ── RISK ── */
+  .risk{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px 20px;margin-bottom:12px;display:flex;gap:14px;align-items:flex-start;
+    border-left:3px solid var(--amber);box-shadow:var(--shadow-sm);
+    transition:box-shadow .2s;
+  }
+  .risk:hover{box-shadow:var(--shadow)}
+  .risk.r-high{border-left-color:var(--red)}
+  .risk.r-med{border-left-color:var(--amber)}
+  .risk.r-low{border-left-color:var(--blue)}
+  .risk-badge{
+    font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:6px;
+    white-space:nowrap;flex-shrink:0;margin-top:1px;
+  }
+  .rb-high{background:var(--red-dim);color:var(--red)}
+  .rb-med{background:var(--amber-dim);color:var(--amber)}
+  .rb-low{background:var(--blue-dim);color:var(--blue)}
+  .risk h4{font-size:.88rem;font-weight:600;margin-bottom:3px;color:var(--text)}
+  .risk p{font-size:.8rem;color:var(--text-muted);line-height:1.55}
+
+  /* ── CHECKLIST ── */
+  .checklist{list-style:none;padding:0;display:grid;gap:8px}
+  .checklist li{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:14px 16px;font-size:.85rem;color:var(--text-secondary);
+    display:flex;align-items:flex-start;gap:12px;box-shadow:var(--shadow-sm);
+    transition:border-color .2s,box-shadow .2s;cursor:pointer;line-height:1.5;
+  }
+  .checklist li:hover{border-color:var(--primary);box-shadow:var(--shadow)}
+  .check-box{
+    width:18px;height:18px;border-radius:4px;border:2px solid var(--border-light);
+    flex-shrink:0;margin-top:2px;transition:border-color .2s,background .2s;
+  }
+  .checklist li:hover .check-box{border-color:var(--primary)}
+  .checklist li.checked .check-box{
+    background:var(--primary);border-color:var(--primary);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+    background-size:12px;background-position:center;background-repeat:no-repeat;
+  }
+  .checklist li.checked{color:var(--text-muted);text-decoration:line-through;opacity:.5}
+
+  /* ── FOOTER ── */
+  .footer{
+    text-align:center;padding:40px 20px;color:var(--text-muted);font-size:.75rem;
+    border-top:1px solid var(--border);margin-top:16px;background:var(--card);
+  }
+
+  /* ── SIMULATOR ── */
+  .sim-card{border:2px solid var(--primary);background:linear-gradient(180deg,rgba(8,145,178,.03),var(--card))}
+  .sim-controls{margin-bottom:20px}
+  .sim-slider-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+  .sim-label{font-size:.82rem;font-weight:600;color:var(--text);white-space:nowrap}
+  .sim-range{
+    flex:1;min-width:160px;height:6px;-webkit-appearance:none;appearance:none;
+    background:var(--border);border-radius:3px;outline:none;cursor:pointer;
+  }
+  .sim-range::-webkit-slider-thumb{
+    -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+    background:var(--primary);border:3px solid var(--card);
+    box-shadow:0 0 0 2px var(--primary),var(--shadow);cursor:pointer;
+  }
+  .sim-range::-moz-range-thumb{
+    width:22px;height:22px;border-radius:50%;
+    background:var(--primary);border:3px solid var(--card);
+    box-shadow:0 0 0 2px var(--primary),var(--shadow);cursor:pointer;
+  }
+  .sim-number{
+    width:60px;padding:6px 8px;border:1px solid var(--border);border-radius:var(--radius-sm);
+    font-family:'IBM Plex Mono',monospace;font-size:1rem;font-weight:600;
+    text-align:center;color:var(--primary);background:var(--card);outline:none;
+  }
+  .sim-number:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-dim)}
+  .sim-unit{font-size:.82rem;color:var(--text-muted);white-space:nowrap}
+  .sim-presets{display:flex;gap:6px;flex-wrap:wrap}
+  .sim-preset{
+    font-size:.72rem;font-weight:600;padding:5px 12px;border-radius:20px;
+    border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);
+    cursor:pointer;transition:all .15s;white-space:nowrap;
+  }
+  .sim-preset:hover{border-color:var(--primary);color:var(--primary)}
+  .sim-preset.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .sim-stats{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+    padding:16px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);
+  }
+  @media(max-width:800px){.sim-stats{grid-template-columns:repeat(2,1fr)}}
+  .sim-stat{text-align:center}
+  .sim-stat-label{font-size:.68rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+  .sim-stat-value{font-family:'IBM Plex Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--text)}
+
+  /* ── SVG ICONS (inline) ── */
+  .ico{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}
+
+  /* ── PRINT ── */
+  @media print{
+    .nav{position:relative;backdrop-filter:none;background:#fff}
+    .card,.stat,.chart-card,.risk{box-shadow:none;break-inside:avoid}
+    body{background:#fff}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">JOHNATHAN</div>
+  <div class="nav-divider"></div>
+  <div class="nav-label">加盟投資分析報告</div>
+  <div class="nav-right">
+    <span class="nav-pill">2026/03/17</span>
+    <span class="nav-pill">3 家加盟商</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <h1><span>強納森人力</span>顧問有限公司</h1>
+    <p class="hero-sub">加盟投資分析報告 &mdash; 透明 &times; 系統化 &times; 長期經營</p>
+    <div class="hero-meta">
+      <span class="hero-tag">資料來源：加盟展簡報 + 現場筆記</span>
+      <span class="hero-tag">加盟開放：2025/12（約 3 個月）</span>
+      <span class="hero-tag">現有加盟商：3 家</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ===== 核心數字 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>核心數字一覽</div>
+      <div class="section-title">投資摘要</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">初始投入</div>
+        <div class="stat-value v-amber">59.8 萬</div>
+        <div class="stat-note">加盟金 44.8 萬 + 保證金 15 萬</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">每月固定支出</div>
+        <div class="stat-value v-red">1.5 萬+</div>
+        <div class="stat-note">權利金 1.2 萬 + 租照 0.3 萬<br>(不含翻譯、每案抽成)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">單案 3 年淨收入</div>
+        <div class="stat-value v-green">7.7–8.1 萬</div>
+        <div class="stat-note">毛收入 9 萬 &minus; 抽成 0.9 萬 &minus; 文件費 0~0.4 萬</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">五年付總公司</div>
+        <div class="stat-value v-purple">~116.8 萬+</div>
+        <div class="stat-note">加盟金 44.8 + 權利金 72<br>+ 每案抽成（另計）</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 市場背景 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label"><svg viewBox="0 0 24 24"><path d="M2 12h5l2-7 3 14 2-7h5"/><circle cx="12" cy="12" r="0"/></svg>市場背景 <span class="badge badge-info">簡報數據</span></div>
+      <div class="section-title">一、高齡化社會的結構性機會</div>
+    </div>
+    <div class="grid-2">
+      <div class="chart-card"><h3>台灣 65 歲以上老年人口趨勢（萬人）</h3><canvas id="chartAging"></canvas></div>
+      <div class="chart-card"><h3>15–64 歲工作年齡人口趨勢（萬人）</h3><canvas id="chartWorking"></canvas></div>
+    </div>
+    <div class="grid-2" style="margin-top:16px">
+      <div class="chart-card"><h3>各年齡層需照顧比例變化</h3><canvas id="chartCare"></canvas></div>
+      <div class="card">
+        <div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>市場關鍵數據</div>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:6px 0;color:var(--text-secondary);font-size:.85rem">台灣總人口 2,329 萬，連續負成長</li>
+          <li style="padding:6px 0;color:var(--text-secondary);font-size:.85rem">65 歲以上占 <strong style="color:var(--text)">20.06%</strong>，已進入超高齡社會</li>
+          <li style="padding:6px 0;color:var(--text-secondary);font-size:.85rem">2028 年人口紅利預估消失</li>
+          <li style="padding:6px 0;color:var(--text-secondary);font-size:.85rem">需照顧家庭中，僅 <strong style="color:var(--text)">18%</strong> 聘請外籍看護</li>
+          <li style="padding:6px 0;color:var(--text-secondary);font-size:.85rem">超過 <strong style="color:var(--text)">80%</strong> 家庭尚未聘請外籍看護</li>
+        </ul>
+        <div class="callout callout-blue" style="margin-top:14px;margin-bottom:0">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span>2026/1/1 起「跨國勞動力精進方案」上路：放寬外籍技術人力配額、旅宿商港開放引進外技、鬆綁中階技術工作規定。</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 繳交給總公司的費用 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>繳交給總公司的費用 <span class="badge badge-warn">成本端</span></div>
+      <div class="section-title">二、費用結構</div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>一次性費用</div>
+        <table>
+          <thead><tr><th>項目</th><th>金額</th><th>備註</th></tr></thead>
+          <tbody>
+            <tr><td>加盟金</td><td><strong style="color:var(--text)">44.8 萬</strong></td><td>品牌授權 + 系統 + 培訓</td></tr>
+            <tr><td>保證金</td><td><strong style="color:var(--text)">15 萬</strong></td><td>5 年合約到期退款</td></tr>
+            <tr class="row-total"><td>合計</td><td>59.8 萬</td><td>目前有加盟展 3 選 1 優惠</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>持續性費用</div>
+        <table>
+          <thead><tr><th>項目</th><th>金額</th><th>備註</th></tr></thead>
+          <tbody>
+            <tr><td>權利金</td><td><strong style="color:var(--text)">12,000 元/月</strong></td><td>固定月繳</td></tr>
+            <tr><td>文件費</td><td><strong style="color:var(--text)">4,000 元/件</strong></td><td>每簽一移工繳交，前 3 位可從權利金抵扣</td></tr>
+            <tr><td>每案抽成</td><td><strong style="color:var(--text)">250 元/月/件</strong></td><td>從移工薪資中抽，繳給總公司</td></tr>
+          </tbody>
+        </table>
+        <div class="footnote">
+          * 文件費抵扣：前 3 件 &times; 4,000 = 12,000 = 當月權利金 &rarr; 前 3 件文件費已含在權利金中<br>
+          * 第 4 件起每件額外付 4,000 | 穩定在管 20 件時月繳抽成 5,000 + 權利金 12,000 = 17,000
+        </div>
+      </div>
+    </div>
+
+    <!-- 抵扣機制圖解 -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-title"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>文件費與權利金抵扣機制</div>
+      <div class="grid-2" style="gap:12px">
+        <div class="scenario">
+          <div class="scenario-label" style="color:var(--green)">情境 A：當月新簽 &le; 3 件</div>
+          <div class="scenario-body">
+            文件費（最多 12,000）從權利金抵扣<br>
+            &rarr; 實際只需繳權利金 12,000/月<br>
+            &rarr; 文件費 = 0 額外支出
+          </div>
+        </div>
+        <div class="scenario">
+          <div class="scenario-label" style="color:var(--red)">情境 B：當月新簽 5 件</div>
+          <div class="scenario-body">
+            前 3 件用權利金抵扣（12,000）<br>
+            第 4、5 件額外付 2 &times; 4,000 = 8,000<br>
+            &rarr; 當月繳 12,000 + 8,000 = <strong style="color:var(--text)">20,000</strong>
+          </div>
+        </div>
+      </div>
+      <div class="callout callout-blue" style="margin-bottom:0">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+        <span><strong>已確認：</strong>「前 3 位」是每月都有 3 個免額的額度。即每月前 3 件文件費可用當月權利金抵扣，非一次性限制。若當月新簽不到 3 件，未用完的額度不累積至下月。</span>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-top:16px"><h3>五年固定費用拆解（萬元）</h3><canvas id="chartCost5yr"></canvas></div>
+  </section>
+
+  <!-- ===== 加盟主獲利 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>加盟主獲利（單件） <span class="badge badge-ok">收入端</span></div>
+      <div class="section-title">三、單案損益試算</div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>完整 3 年聘期損益表</div>
+      <table>
+        <thead><tr><th>項目</th><th>支付方</th><th>金額</th><th>性質</th></tr></thead>
+        <tbody>
+          <tr><td>雇主簽約金</td><td>雇主</td><td>+20,000 元/件</td><td>一次性</td></tr>
+          <tr><td>雇主服務費</td><td>雇主</td><td>+2,000 元/年 &times; 3 年 = +6,000 元</td><td>持續性</td></tr>
+          <tr><td>移工服務費</td><td>移工（薪資中抽）</td><td>+1,800/月 &rarr; +1,700/月 &rarr; +1,500/月（逐年遞減）</td><td>持續性</td></tr>
+          <tr><td>國外公司獎金</td><td>國外端</td><td>+~4,000 元/件</td><td>一次性</td></tr>
+          <tr class="row-highlight"><td>毛收入小計</td><td></td><td><strong>+90,000 元</strong></td><td></td></tr>
+          <tr class="row-cost"><td>文件費</td><td>付給總公司</td><td>&minus;4,000 元（前 3 件可用權利金抵）</td><td>一次性</td></tr>
+          <tr class="row-cost"><td>繳回總公司抽成</td><td>付給總公司</td><td>&minus;250 元/月 &times; 36 月 = &minus;9,000 元</td><td>持續性</td></tr>
+          <tr class="row-total"><td><strong>單案 3 年淨收入</strong></td><td></td><td><strong>~77,000–81,000 元</strong></td><td></td></tr>
+        </tbody>
+      </table>
+      <div class="footnote">
+        * 移工服務費 3 年：1,800&times;12 + 1,700&times;12 + 1,500&times;12 = 60,000 元（占毛收入 67%）<br>
+        * 文件費若可抵 &rarr; 淨收入 81,000；不可抵 &rarr; 77,000 | 約 80% 移工做滿 3 年；20% 提前離開淨收入更低
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="chart-card"><h3>單案毛收入結構（90,000 元）</h3><canvas id="chartRevenue"></canvas></div>
+      <div class="chart-card"><h3>單案 36 個月累計淨收入曲線</h3><canvas id="chartMonthly"></canvas></div>
+    </div>
+    <div class="callout callout-amber" style="margin-top:16px">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <span><strong>收入結構特性：</strong>移工服務費占毛收入 67%，按月入帳。首月入帳約 25,800 元（簽約金 + 國外獎金 + 月費），若文件費無法抵扣則為 21,800。之後每月僅入帳 1,550 元（月費 1,800 &minus; 抽成 250）。</span>
+    </div>
+  </section>
+
+  <!-- ===== 額外營運成本 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>額外營運成本 <span class="badge badge-warn">重要</span></div>
+      <div class="section-title">四、營運開支</div>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr><th>項目</th><th>金額/月</th><th>備註</th></tr></thead>
+        <tbody>
+          <tr><td>就業服務乙級證照租用</td><td>2,500–3,000</td><td>法定必備，租用持照者牌照</td></tr>
+          <tr><td>翻譯人員</td><td>未知</td><td>可 Full-time 或 Part-time，可與其他加盟主合租分攤</td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-red" style="margin-bottom:0;margin-top:14px">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></svg>
+        <span><strong>租照風險：</strong>就服乙級證照是法定門檻。租用他人牌照，若持照者不續約、漲價或出問題，業務直接停擺。五年租金累計 15–18 萬。建議評估自行考取。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 業績預估與回本分析 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>業績預估與回本分析 <span class="badge badge-danger">關鍵</span></div>
+      <div class="section-title">五、現金流與損益平衡</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">6 個月預估案件</div>
+        <div class="stat-value v-blue">18–20</div>
+        <div class="stat-note">簡報宣稱（尚無加盟主驗證）</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">前 6 月固定支出</div>
+        <div class="stat-value v-red">~9 萬</div>
+        <div class="stat-note">15,000 &times; 6 月（不含翻譯）</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">單案首月淨入帳</div>
+        <div class="stat-value v-green">~2.6 萬</div>
+        <div class="stat-note">簽約金 + 國外獎金 + 首月月費</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">每案後續月淨入帳</div>
+        <div class="stat-value v-amber">1,550</div>
+        <div class="stat-note">月費 1,800 &minus; 抽成 250（第一年）</div>
+      </div>
+    </div>
+    <!-- 互動模擬器 -->
+    <div class="card sim-card" style="margin-top:4px">
+      <div class="card-title"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>現金流模擬器 <span class="badge badge-info">互動</span></div>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:16px">拖動滑桿或直接輸入每月預估談成件數，即時計算現金流與回本時間。</p>
+      <div class="sim-controls">
+        <div class="sim-slider-row">
+          <label class="sim-label" for="simSlider">每月談成件數</label>
+          <input type="range" id="simSlider" min="1" max="8" step="1" value="3" class="sim-range">
+          <input type="number" id="simInput" min="1" max="8" step="1" value="3" class="sim-number">
+          <span class="sim-unit">件 / 月</span>
+        </div>
+        <div class="sim-presets">
+          <button class="sim-preset" data-v="1">悲觀 1件</button>
+          <button class="sim-preset" data-v="2">保守 2件</button>
+          <button class="sim-preset active" data-v="3">一般 3件</button>
+          <button class="sim-preset" data-v="4">樂觀 4件</button>
+          <button class="sim-preset" data-v="5">積極 5件</button>
+        </div>
+      </div>
+      <div class="sim-stats" id="simStats">
+        <div class="sim-stat">
+          <div class="sim-stat-label">預估回本月份</div>
+          <div class="sim-stat-value" id="simBreakMonth">—</div>
+        </div>
+        <div class="sim-stat">
+          <div class="sim-stat-label">第 12 月累計損益</div>
+          <div class="sim-stat-value" id="simM12">—</div>
+        </div>
+        <div class="sim-stat">
+          <div class="sim-stat-label">第 24 月累計損益</div>
+          <div class="sim-stat-value" id="simM24">—</div>
+        </div>
+        <div class="sim-stat">
+          <div class="sim-stat-label">第 30 月在管件數</div>
+          <div class="sim-stat-value" id="simCases30">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:16px">
+      <div class="chart-card">
+        <h3>累計現金流預估</h3>
+        <canvas id="chartCashflow"></canvas>
+        <div class="footnote" id="cfFootnote">前 3 個月為培訓期（無新案）| 80% 留任率 | 計入固定支出 + 抽成 + 文件費（每月前 3 件免額）</div>
+      </div>
+      <div class="chart-card">
+        <h3>月度損益平衡分析（不含初始投入）</h3>
+        <canvas id="chartBreakeven"></canvas>
+        <div class="footnote">月淨收入 = 在管件數 &times;（月費 &minus; 抽成）&minus; 固定支出 | 紅線 = 你的設定件數對應的在管量</div>
+      </div>
+    </div>
+    <div class="callout callout-red" style="margin-top:16px">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></svg>
+      <span><strong>關鍵風險：</strong>「6 個月 18–20 件」目前沒有任何加盟主實際達成過（最久的也才營運約 3 個月）。此數字缺乏驗證基礎。</span>
+    </div>
+  </section>
+
+  <!-- ===== 加盟流程 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>加盟流程</div>
+      <div class="section-title">六、從簽約到開業</div>
+    </div>
+    <div class="timeline">
+      <div class="tl-step"><div class="tl-dot">1</div><div class="tl-title">適性評估</div><div class="tl-desc">給予開店建議</div></div>
+      <div class="tl-step"><div class="tl-dot">2</div><div class="tl-title">簽訂合約</div><div class="tl-desc">確保雙方權利</div></div>
+      <div class="tl-step"><div class="tl-dot">3</div><div class="tl-title">教育培訓</div><div class="tl-desc">階梯式課程<br>實戰演練<br>每周案例教學</div></div>
+      <div class="tl-step"><div class="tl-dot">4</div><div class="tl-title">試營運</div><div class="tl-desc">實戰陪跑<br>行銷賦能</div></div>
+      <div class="tl-step"><div class="tl-dot">5</div><div class="tl-title">正式開業</div><div class="tl-desc">許可證核發</div></div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="card-title"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>加盟資格</div>
+      <ul style="list-style:none;padding:0">
+        <li style="padding:5px 0;color:var(--text-secondary);font-size:.85rem">遵循法規和公司規範</li>
+        <li style="padding:5px 0;color:var(--text-secondary);font-size:.85rem">自備加盟金 44.8 萬 + 保證金 15 萬</li>
+        <li style="padding:5px 0;color:var(--text-secondary);font-size:.85rem">秉持相同經營理念、具備創業心理準備</li>
+        <li style="padding:5px 0;color:var(--text-secondary);font-size:.85rem">需自行找好營業登記地址（不一定要店面，但必須有地址）</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 優劣勢 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></svg>優勢與劣勢分析</div>
+      <div class="section-title">七、SWOT 摘要</div>
+    </div>
+    <div class="pros-cons">
+      <div class="card pc-card pc-pros">
+        <div class="card-title" style="color:var(--green)"><svg viewBox="0 0 24 24" style="stroke:var(--green)"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>優勢 / 機會</div>
+        <ul>
+          <li>台灣高齡化是不可逆的結構性趨勢，市場需求明確</li>
+          <li>80% 以上家庭尚未聘請外籍看護，滲透率低</li>
+          <li>2026 政策利多（跨國勞動力精進方案）</li>
+          <li>低門檻開業：不需店面、裝潢、囤貨</li>
+          <li>總公司提供系統、翻譯、行銷、海外資源</li>
+          <li>持續性收入模型（移工服務費按月入帳）</li>
+          <li>80% 移工做滿 3 年聘期，收入穩定性尚可</li>
+          <li>早期加盟（第 4 家），可能有議價空間</li>
+          <li>勞動部 A 級評鑑（總公司層級）</li>
+        </ul>
+      </div>
+      <div class="card pc-card pc-cons">
+        <div class="card-title" style="color:var(--red)"><svg viewBox="0 0 24 24" style="stroke:var(--red)"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>劣勢 / 風險</div>
+        <ul>
+          <li>加盟體系極度早期（才 3 個月、3 家），無驗證數據</li>
+          <li>初始投入 59.8 萬 + 每月固定支出 1.5 萬+</li>
+          <li>五年綁約，中途退出條件不明</li>
+          <li>繳總公司三重費用：權利金 + 文件費 + 每案抽成</li>
+          <li>業績預估缺乏實際驗證</li>
+          <li>租用就服乙級證照，命脈掛在別人身上</li>
+          <li>人力仲介市場競爭者眾多</li>
+          <li>收入大量依賴移工月費，前期現金流慢</li>
+          <li>翻譯人員費用未明，是隱藏成本</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 風險評估 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></svg>風險評估 <span class="badge badge-danger">必讀</span></div>
+      <div class="section-title">八、風險清單</div>
+    </div>
+
+    <div class="risk r-high"><span class="risk-badge rb-high">HIGH</span><div><h4>加盟體系極度早期，無成功案例可驗證</h4><p>去年 12 月才開放加盟，目前 3 家最多營運 3 個月。所有業績預估（6 個月 18–20 件）都是紙上數字，無加盟主實際驗證。你就是白老鼠。</p></div></div>
+    <div class="risk r-high"><span class="risk-badge rb-high">HIGH</span><div><h4>五年合約綁定，退場條件不明</h4><p>合約期 5 年，加盟金 44.8 萬是否可退不確定。中途退出的違約金、條件完全未揭露。做不起來可能被綁住且損失慘重。</p></div></div>
+    <div class="risk r-high"><span class="risk-badge rb-high">HIGH</span><div><h4>就服乙級證照依賴外部租用</h4><p>法定門檻。租用他人證照（2,500–3,000/月），若持照者不續約、漲價或出問題，業務直接停擺。五年累計 15–18 萬。</p></div></div>
+    <div class="risk r-med"><span class="risk-badge rb-med">MED</span><div><h4>三重費用結構：權利金 + 文件費 + 每案抽成</h4><p>每月權利金 12,000 + 每案抽成 250/月 + 每簽一人文件費 4,000（前 3 件可抵）。穩定在管 20 件、當月新簽 4 件時：月繳 21,000。</p></div></div>
+    <div class="risk r-low"><span class="risk-badge rb-low">已確認</span><div><h4>文件費抵扣為每月額度（已釐清）</h4><p>已確認「前 3 位」是每月都有 3 個免額額度。月簽 &le;3 件時文件費 = 0（由權利金涵蓋）；第 4 件起每件額外付 4,000。但若當月新簽不到 3 件，等於多付了權利金（未用額度不累積）。</p></div></div>
+    <div class="risk r-med"><span class="risk-badge rb-med">MED</span><div><h4>回本週期可能超過預期</h4><p>單案每月淨入帳僅 1,550 元（第一年），收入緩慢累積。前 6 個月光固定支出就約 9 萬，加上初始 59.8 萬，現金流壓力大。</p></div></div>
+    <div class="risk r-med"><span class="risk-badge rb-med">MED</span><div><h4>保證金退還條件需確認</h4><p>筆記記載「五年合約到期退款」，但需確認是否有附帶條件。中途退出能否拿回？</p></div></div>
+    <div class="risk r-med"><span class="risk-badge rb-med">MED</span><div><h4>區域保護與競業條款不明</h4><p>同一區域是否會開太多家？合約到期後是否有競業禁止？直接影響長期利益。</p></div></div>
+    <div class="risk r-low"><span class="risk-badge rb-low">TBD</span><div><h4>翻譯人員費用不透明</h4><p>人力仲介需翻譯，「可合租」但實際費用未知。這是一筆隱藏成本，需在決策前釐清。</p></div></div>
+    <div class="risk r-low"><span class="risk-badge rb-low">TBD</span><div><h4>許可證核發時間與 A 級評鑑歸屬</h4><p>從簽約到拿到許可證需多久？A 級評鑑是總公司的，加盟分公司評鑑是獨立的。</p></div></div>
+  </section>
+
+  <!-- ===== 行動清單 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>下一步行動清單</div>
+      <div class="section-title">九、決策前必做</div>
+    </div>
+    <ul class="checklist" id="todoList">
+      <li><div class="check-box"></div><span>要求提供加盟合約範本，找律師審閱（重點：提前終止、違約金、保證金退還條件、區域保護、競業禁止）</span></li>
+      <li><div class="check-box"></div><span>聯繫現有 3 位加盟主，了解實際營運狀況（開業多久、接了幾件、遇到什麼困難）</span></li>
+      <li><div class="check-box"></div><span>確認五年合約中途退出的具體條件與罰則</span></li>
+      <li><div class="check-box"></div><span>確認從簽約到取得勞動部許可證的時間與流程</span></li>
+      <li><div class="check-box"></div><span>確認移工中途離開後的遞補機制（是否算新案件、是否重新收費）</span></li>
+      <li><div class="check-box"></div><span>要求對方提供月度現金流預估表（非只有 3 年總收入）</span></li>
+      <li><div class="check-box"></div><span>評估自行考取就業服務乙級證照（省下五年 15–18 萬租照費，且不受制於人）</span></li>
+      <li><div class="check-box"></div><span>調查目標營業區域的人力仲介競爭密度</span></li>
+      <li class="checked"><div class="check-box"></div><span>書面確認「前 3 位可抵扣」是每月額度、還是加盟後總共只有前 3 位？ → 已確認：每月都有 3 個免額額度</span></li>
+      <li><div class="check-box"></div><span>確認翻譯人員實際費用與合租方式</span></li>
+      <li><div class="check-box"></div><span>確認總公司本身的經營歷史與財務狀況（才開放加盟 3 個月，總公司經營多久？）</span></li>
+    </ul>
+  </section>
+
+</div>
+
+<footer class="footer">強納森人力加盟投資分析 &mdash; 僅供內部決策參考，不構成投資建議</footer>
+
+<script>
+// ===== Checklist interactivity =====
+document.getElementById('todoList').addEventListener('click', e => {
+  const li = e.target.closest('li');
+  if (li) li.classList.toggle('checked');
+});
+
+// ===== Chart.js =====
+const fontStack = "'IBM Plex Sans','Noto Sans TC',system-ui,sans-serif";
+const monoStack = "'IBM Plex Mono',monospace";
+Chart.defaults.color = '#64748b';
+Chart.defaults.borderColor = 'rgba(226,232,240,.8)';
+Chart.defaults.font.family = fontStack;
+Chart.defaults.font.size = 11;
+
+const C = {
+  green:'#059669', greenA:'rgba(5,150,105,.12)',
+  red:'#dc2626', redA:'rgba(220,38,38,.12)',
+  amber:'#d97706', amberA:'rgba(217,119,6,.12)',
+  blue:'#2563eb', blueA:'rgba(37,99,235,.10)',
+  purple:'#7c3aed', cyan:'#0891b2', pink:'#db2777',
+  text:'#0f172a', muted:'#94a3b8',
+};
+
+// 1. 老年人口
+new Chart(document.getElementById('chartAging'),{
+  type:'bar',
+  data:{
+    labels:['1980','1990','2000','2010','2023','2030','2040','2050','2060','2070'],
+    datasets:[{
+      label:'65歲以上人口（萬人）',data:[77,127,192,249,430,557,677,766,761,708],
+      backgroundColor:C.amber,borderRadius:4,barPercentage:.7
+    },{
+      label:'占總人口比 %',data:[4.3,7.1,14.6,20.0,20.0,null,null,null,null,43.6],
+      type:'line',borderColor:C.red,pointBackgroundColor:C.red,
+      yAxisID:'y1',tension:.3,spanGaps:true,borderWidth:2,pointRadius:3
+    }]
+  },
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyle:'circle'}}},
+    scales:{y:{title:{display:true,text:'萬人'},beginAtZero:true},y1:{position:'right',title:{display:true,text:'%'},beginAtZero:true,grid:{display:false}}}}
+});
+
+// 2. 工作人口
+new Chart(document.getElementById('chartWorking'),{
+  type:'line',
+  data:{labels:['1980','1990','2000','2010','2015\n(最高峰)','2022','2028\n(紅利消失)','2030','2040','2050','2060','2070'],
+    datasets:[{label:'15–64歲人口（萬人）',data:[1136,null,null,null,1737,1636,1540,null,null,null,null,708],
+      borderColor:C.blue,backgroundColor:C.blueA,fill:true,tension:.4,spanGaps:true,pointRadius:5,pointBackgroundColor:C.blue,borderWidth:2}]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle'}}},scales:{y:{title:{display:true,text:'萬人'}}}}
+});
+
+// 3. 照顧比例
+new Chart(document.getElementById('chartCare'),{
+  type:'bar',
+  data:{labels:['65–69歲','70–74歲','75–79歲','80歲以上'],
+    datasets:[{label:'106年',data:[4.88,6.68,11.97,32.39],backgroundColor:'rgba(37,99,235,.35)',borderRadius:4,barPercentage:.6},
+      {label:'111年',data:[5.67,11.10,19.65,48.07],backgroundColor:'rgba(220,38,38,.35)',borderRadius:4,barPercentage:.6}]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle'}}},scales:{y:{title:{display:true,text:'%'},beginAtZero:true}}}
+});
+
+// 4. 毛收入結構
+new Chart(document.getElementById('chartRevenue'),{
+  type:'doughnut',
+  data:{labels:['移工服務費 60,000','雇主簽約金 20,000','雇主服務費 6,000','國外獎金 4,000'],
+    datasets:[{data:[60000,20000,6000,4000],backgroundColor:[C.blue,C.amber,C.purple,C.pink],borderWidth:0,hoverOffset:6}]},
+  options:{responsive:true,cutout:'65%',plugins:{legend:{position:'bottom',labels:{padding:14,usePointStyle:true,pointStyle:'circle',font:{size:11}}},
+    tooltip:{callbacks:{label:ctx=>`${ctx.label}（${((ctx.parsed/90000)*100).toFixed(1)}%）`}}}}
+});
+
+// 5. 單案月度累計淨收入
+(()=>{
+  const months=Array.from({length:36},(_,i)=>`${i+1}月`);
+  const cumG=[],cumN=[];let g=0,n=0;
+  for(let i=0;i<36;i++){
+    let mg=0,mc=250;
+    if(i===0)mg+=20000+4000;
+    if(i===0||i===12||i===24)mg+=2000;
+    mg+=(i<12?1800:i<24?1700:1500);
+    g+=mg;n+=(mg-mc);cumG.push(g);cumN.push(n);
+  }
+  new Chart(document.getElementById('chartMonthly'),{type:'line',
+    data:{labels:months,datasets:[
+      {label:'累計毛收入',data:cumG,borderColor:'rgba(5,150,105,.30)',borderDash:[5,5],tension:.2,pointRadius:0,fill:false,borderWidth:1.5},
+      {label:'累計淨收入（扣抽成）',data:cumN,borderColor:C.green,backgroundColor:C.greenA,fill:true,tension:.2,pointRadius:0,borderWidth:2}
+    ]},
+    options:{responsive:true,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle'}}},
+      scales:{x:{ticks:{maxTicksLimit:12}},y:{title:{display:true,text:'元'},beginAtZero:true,ticks:{callback:v=>(v/10000).toFixed(1)+'萬'}}}}
+  });
+})();
+
+// 6. 五年費用
+new Chart(document.getElementById('chartCost5yr'),{type:'bar',
+  data:{labels:['加盟金','保證金\n(到期退款)','權利金\n(5年)','文件費\n(5年估)','每案抽成\n(5年/20件估)','租照費\n(5年)'],
+    datasets:[{label:'金額（萬元）',data:[44.8,15,72,12,30,18],
+      backgroundColor:[C.redA,C.amberA,C.redA,C.redA,C.redA,C.redA],
+      borderColor:['transparent',C.amber,'transparent','transparent','transparent','transparent'],
+      borderWidth:1,borderRadius:4,barPercentage:.65}]},
+  options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.x} 萬元`}}},
+    scales:{x:{title:{display:true,text:'萬元'},beginAtZero:true}}}
+});
+
+// 7 & 8. 互動現金流模擬器
+(()=>{
+  const N=30,FC=15000,IC=598000,COM=250,DOC=4000,DW=3;
+  const months=Array.from({length:N},(_,i)=>`${i}月`);
+
+  // 現金流計算
+  function calcCF(npc){
+    const cs=[],r=[];let tR=0,tC=IC;
+    for(let m=0;m<N;m++){
+      tC+=FC;let nm=0;
+      if(m>=3){for(let c=0;c<npc;c++){cs.push({s:m});nm++}}
+      tC+=Math.max(0,nm-DW)*DOC;
+      let mR=0;
+      for(const c of cs){
+        const a=m-c.s;
+        if(a===0)mR+=20000+4000;
+        if(a===0||a===12||a===24)mR+=2000;
+        mR+=(a<12?1800:a<24?1700:a<36?1500:0);
+        tC+=COM;
+      }
+      tR+=mR;r.push(tR-tC);
+    }
+    // 在管件數（第30月）
+    const totalCases=Math.max(0,(N-3))*npc;
+    return {data:r, cases30:totalCases};
+  }
+
+  // 損益平衡計算
+  function calcBE(){
+    const cn=Array.from({length:26},(_,i)=>i),NPC=1800-250;
+    return {x:cn, y:cn.map(n=>n*NPC-FC)};
+  }
+
+  // 建立圖表
+  let cfChart=new Chart(document.getElementById('chartCashflow'),{type:'line',
+    data:{labels:months,datasets:[
+      {label:'你的設定',data:[],borderColor:C.cyan,backgroundColor:'rgba(8,145,178,.08)',fill:true,tension:.3,pointRadius:0,borderWidth:2.5},
+      {label:'保守（2件/月）',data:calcCF(2).data,borderColor:C.amberA,tension:.3,pointRadius:0,borderWidth:1.5,borderDash:[4,4]},
+      {label:'樂觀（4件/月）',data:calcCF(4).data,borderColor:C.greenA,tension:.3,pointRadius:0,borderWidth:1.5,borderDash:[4,4]},
+      {data:Array(N).fill(0),borderColor:'rgba(148,163,184,.25)',borderDash:[5,5],pointRadius:0,label:'損益平衡線',borderWidth:1}
+    ]},
+    options:{responsive:true,
+      plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle',filter:item=>item.text!=='損益平衡線'}}},
+      scales:{x:{title:{display:true,text:'月'}},y:{title:{display:true,text:'累計損益'},ticks:{callback:v=>(v/10000).toFixed(0)+'萬'}}}
+    }
+  });
+
+  const beData=calcBE();
+  let beChart=new Chart(document.getElementById('chartBreakeven'),{type:'bar',
+    data:{labels:beData.x.map(n=>`${n}`),datasets:[
+      {label:'月淨收入（元）',data:beData.y,
+        backgroundColor:beData.y.map(v=>v>=0?C.greenA:C.redA),
+        borderColor:beData.y.map(v=>v>=0?C.green:C.red),
+        borderWidth:1,borderRadius:3,barPercentage:.7}
+    ]},
+    options:{responsive:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>`月淨收入：${ctx.parsed.y.toLocaleString()} 元`}},
+        annotation:undefined
+      },
+      scales:{x:{title:{display:true,text:'在管案件數'}},y:{title:{display:true,text:'元/月'},ticks:{callback:v=>(v/1000).toFixed(0)+'K'}}}
+    }
+  });
+
+  // 更新函式
+  function updateSim(npc){
+    npc=Math.max(1,Math.min(8,parseInt(npc)||3));
+    const result=calcCF(npc);
+
+    // 更新現金流圖
+    cfChart.data.datasets[0].data=result.data;
+    cfChart.data.datasets[0].label=`你的設定（${npc}件/月）`;
+    cfChart.update();
+
+    // 損益平衡圖加垂直指標線（用 dataset 模擬）
+    const steadyCases=Math.min((N-3)*npc, 25);
+    // 移除舊指標 dataset
+    while(beChart.data.datasets.length>1) beChart.data.datasets.pop();
+    // 加上垂直線指標
+    const markerData=beData.x.map(x=>x===steadyCases?beData.y[x]:null);
+    beChart.data.datasets.push({
+      label:`你的在管量 ≈ ${steadyCases}+`,type:'bar',data:markerData,
+      backgroundColor:'rgba(8,145,178,.25)',borderColor:C.cyan,borderWidth:2,
+      borderRadius:3,barPercentage:.7
+    });
+    beChart.update();
+
+    // 回本月份
+    const breakMonth=result.data.findIndex(v=>v>=0);
+    document.getElementById('simBreakMonth').textContent=
+      breakMonth>=0?`第 ${breakMonth} 月`:'30月內未回本';
+    document.getElementById('simBreakMonth').style.color=
+      breakMonth>=0?'var(--green)':'var(--red)';
+
+    // 第12月、第24月損益
+    const fmt=v=>{
+      const abs=Math.abs(v);
+      const str=abs>=10000?(abs/10000).toFixed(1)+'萬':abs.toLocaleString();
+      return (v>=0?'+':'−')+str;
+    };
+    const m12=result.data[11]||0, m24=result.data[23]||0;
+    document.getElementById('simM12').textContent=fmt(m12);
+    document.getElementById('simM12').style.color=m12>=0?'var(--green)':'var(--red)';
+    document.getElementById('simM24').textContent=fmt(m24);
+    document.getElementById('simM24').style.color=m24>=0?'var(--green)':'var(--red)';
+
+    // 在管件數
+    document.getElementById('simCases30').textContent=result.cases30;
+    document.getElementById('simCases30').style.color='var(--blue)';
+  }
+
+  // 綁定事件
+  const slider=document.getElementById('simSlider');
+  const numInput=document.getElementById('simInput');
+  const presets=document.querySelectorAll('.sim-preset');
+
+  function syncAll(v){
+    slider.value=v; numInput.value=v;
+    presets.forEach(b=>b.classList.toggle('active',parseInt(b.dataset.v)===parseInt(v)));
+    updateSim(v);
+  }
+
+  slider.addEventListener('input',e=>syncAll(e.target.value));
+  numInput.addEventListener('input',e=>{
+    let v=parseInt(e.target.value);
+    if(v>=1&&v<=8) syncAll(v);
+  });
+  presets.forEach(b=>b.addEventListener('click',()=>syncAll(b.dataset.v)));
+
+  // 初始渲染
+  syncAll(3);
+})();
+</script>
+</body>
+</html>
