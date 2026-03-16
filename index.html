@@ -596,7 +596,7 @@
       <div class="chart-card">
         <h3>月度損益平衡分析（不含初始投入）</h3>
         <canvas id="chartBreakeven"></canvas>
-        <div class="footnote">月淨收入 = 在管件數 &times;（月費 &minus; 抽成）&minus; 固定支出 | 紅線 = 你的設定件數對應的在管量</div>
+        <div class="footnote">每月淨收入 = 在管件數 &times;（月費 &minus; 抽成）+ 新簽一次性收入 &minus; 固定支出 &minus; 文件費 | 紅色 = 虧損月、綠色 = 獲利月</div>
       </div>
     </div>
     <div class="callout callout-red" style="margin-top:16px">
@@ -839,11 +839,23 @@ new Chart(document.getElementById('chartCost5yr'),{type:'bar',
     return {data:r, cases30:totalCases};
   }
 
-  // 損益平衡計算
-  const BE_MAX=40;
-  function calcBE(){
-    const cn=Array.from({length:BE_MAX+1},(_,i)=>i),NPC=1800-250;
-    return {x:cn, y:cn.map(n=>n*NPC-FC)};
+  // 月度損益計算（每月淨收入 = 在管件數 × 月費淨額 − 固定支出 − 新簽文件費）
+  function calcMonthlyPL(npc){
+    const r=[];let activeCases=0;
+    for(let m=0;m<N;m++){
+      let newCases=0;
+      if(m>=3) newCases=npc;
+      const docFee=Math.max(0,newCases-DW)*DOC;
+      // 月費依年份遞減（簡化：用平均 1,667）
+      const avgFee=1667;
+      const monthlyIncome=activeCases*(avgFee-COM)+newCases*(20000+4000+2000);
+      const monthlyCost=FC+docFee+activeCases*COM+newCases*COM;
+      // 淨收入 = 在管件月費 + 新簽一次性收入 − 固定支出 − 文件費 − 抽成
+      const netIncome=(activeCases*(avgFee-COM))+(newCases*(20000+4000+2000))-FC-docFee;
+      r.push(netIncome);
+      activeCases+=newCases;
+    }
+    return r;
   }
 
   // 建立圖表
@@ -860,21 +872,27 @@ new Chart(document.getElementById('chartCost5yr'),{type:'bar',
     }
   });
 
-  const beData=calcBE();
   let beChart=new Chart(document.getElementById('chartBreakeven'),{type:'bar',
-    data:{labels:beData.x.map(n=>`${n}`),datasets:[
-      {label:'月淨收入（元）',data:beData.y,
-        backgroundColor:beData.y.map(v=>v>=0?C.greenA:C.redA),
-        borderColor:beData.y.map(v=>v>=0?C.green:C.red),
-        borderWidth:1,borderRadius:3,barPercentage:.7}
+    data:{labels:months,datasets:[
+      {label:'月淨收入',data:[],
+        backgroundColor:[],borderColor:[],
+        borderWidth:1,borderRadius:3,barPercentage:.8}
     ]},
     options:{responsive:true,
       plugins:{
         legend:{display:false},
-        tooltip:{callbacks:{label:ctx=>`月淨收入：${ctx.parsed.y.toLocaleString()} 元`}},
-        annotation:undefined
+        tooltip:{callbacks:{label:ctx=>{
+          const v=ctx.parsed.y;
+          return `月淨收入：${v>=0?'+':''}${v.toLocaleString()} 元`;
+        }}}
       },
-      scales:{x:{title:{display:true,text:'在管案件數'}},y:{title:{display:true,text:'元/月'},ticks:{callback:v=>(v/1000).toFixed(0)+'K'}}}
+      scales:{
+        x:{title:{display:true,text:'月'},ticks:{maxTicksLimit:15}},
+        y:{title:{display:true,text:'元/月'},ticks:{callback:v=>{
+          const abs=Math.abs(v);
+          return (v<0?'-':'')+(abs>=10000?(abs/10000).toFixed(0)+'萬':abs.toLocaleString());
+        }}}
+      }
     }
   });
 
@@ -888,27 +906,11 @@ new Chart(document.getElementById('chartCost5yr'),{type:'bar',
     cfChart.data.datasets[0].label=`你的設定（${npc}件/月）`;
     cfChart.update();
 
-    // 損益平衡圖：標記 6 個月與 12 個月的在管量
-    const cases6m=Math.min(6*npc, BE_MAX);
-    const cases12m=Math.min(12*npc, BE_MAX);
-    // 移除舊指標 datasets
-    while(beChart.data.datasets.length>1) beChart.data.datasets.pop();
-    // 6 個月指標
-    const marker6=beData.x.map(x=>x===cases6m?beData.y[x]:null);
-    beChart.data.datasets.push({
-      label:`開業 6 個月 ≈ ${cases6m} 件`,type:'bar',data:marker6,
-      backgroundColor:'rgba(217,119,6,.3)',borderColor:C.amber,borderWidth:2,
-      borderRadius:3,barPercentage:.7
-    });
-    // 12 個月指標
-    if(cases12m!==cases6m){
-      const marker12=beData.x.map(x=>x===cases12m?beData.y[x]:null);
-      beChart.data.datasets.push({
-        label:`開業 12 個月 ≈ ${cases12m} 件`,type:'bar',data:marker12,
-        backgroundColor:'rgba(8,145,178,.3)',borderColor:C.cyan,borderWidth:2,
-        borderRadius:3,barPercentage:.7
-      });
-    }
+    // 更新月度損益圖
+    const plData=calcMonthlyPL(npc);
+    beChart.data.datasets[0].data=plData;
+    beChart.data.datasets[0].backgroundColor=plData.map(v=>v>=0?C.greenA:C.redA);
+    beChart.data.datasets[0].borderColor=plData.map(v=>v>=0?C.green:C.red);
     beChart.update();
 
     // 回本月份
